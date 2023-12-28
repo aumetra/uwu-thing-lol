@@ -6,9 +6,16 @@ namespace FixelPlut.Server.Services;
 
 public class QueueService : IQueueService
 {
+    private readonly ILogger<QueueService> logger;
+
     private const int s_take = 10000;
     private int index = 0;
     private readonly List<string> workItemQueue = new();
+
+    public QueueService(ILogger<QueueService> logger)
+    {
+        this.logger = logger;
+    }
 
     internal void Add(string workItem)
         => workItemQueue.Add(workItem);
@@ -21,6 +28,7 @@ public class QueueService : IQueueService
         if (index > workItemQueue.Count - s_take)
             index = 0;
         var items = workItemQueue.Skip(index).Take(s_take).ToArray();
+        logger.LogInformation("Left {Length}", items.Length);
         index += s_take;
         return items;
     }
@@ -36,6 +44,11 @@ public class QueueService : IQueueService
             workItemQueue[n] = workItemQueue[k];
             workItemQueue[k] = temp;
         }
+    }
+
+    internal void Clear()
+    {
+        workItemQueue.Clear();
     }
 
     internal void Add(IEnumerable<string> rect1)

@@ -10,7 +10,7 @@ import time
 
 
 SERVER = "http://151.217.2.77:5000/PingPong"
-REQUEST_EACH = 25
+REQUEST_EACH = 10
 request_counter = 0
 
 wn = turtle.Screen()

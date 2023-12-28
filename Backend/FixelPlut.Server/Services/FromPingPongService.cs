@@ -7,10 +7,10 @@ namespace FixelPlut.Server.Services;
 
 public class FromPingPongService : ILoaderService
 {
-    const int PlayerHeight = 400;
-    const int PlayerWidth = 50;
-    const int BallHeight = 50;
-    const int BallWidth = 50;
+    const int PlayerHeight = 125;
+    const int PlayerWidth = 30;
+    const int BallHeight = 25;
+    const int BallWidth = 25;
 
     private readonly BlockingCollection<PingPongTick> pingPongTickQueue = new();
     private readonly QueueService queueService;
@@ -41,7 +41,7 @@ public class FromPingPongService : ILoaderService
                 var rect2 = GenerateRectangle(tick.Player2X, tick.Player2Y, PlayerWidth, PlayerHeight, "ffff00");
                 var ball = GenerateRectangle(tick.BallX, tick.BallY, BallWidth, BallHeight, "ffff00");
 
-                queueService.Limit(100000);
+                queueService.Clear();
 
                 queueService.Add(rect1);
                 queueService.Add(rect2);

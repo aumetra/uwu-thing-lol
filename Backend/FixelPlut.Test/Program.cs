@@ -21,8 +21,6 @@ internal static class Program
 
     static async Task Main(string[] args)
     {
-        //var cmds = File.ReadAllLines(@"C:\Users\danielh\source\repos\PixelFlut\PixelFlut.Server\Commands\37C3\1.txt");
-        //var cmdBytes = cmds.Select(Encoding.ASCII.GetBytes).ToArray();
         await Run("151.217.15.90", 1337);
     }
 
