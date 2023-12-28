@@ -6,6 +6,11 @@ import turtle  # Basic Graphics module
 
 import time
 
+SERVER = "http://localhost:5000"
+
+
+
+
 wn = turtle.Screen()
 wn.title("Pong by K G Prajwal")  # Window title
 wn.bgcolor("black")  # Window background
@@ -82,6 +87,32 @@ def paddle_b_down():
     paddle_b.sety(y)
 
 
+def build_json():
+    # {
+    #     "Player1X": 100,
+    #     "Player1Y": 100,
+    #     "Player2X": 100,
+    #     "Player2Y": 100,
+    #     "BallX": 100,
+    #     "BallY": 100
+    # }
+    data = {
+        "Player1X": paddle_a.xcor(),
+        "Player1Y": paddle_a.ycor(),
+        "Player2X": paddle_b.xcor(),
+        "Player2Y": paddle_b.ycor(),
+        "BallX": ball.xcor(),
+        "BallY": ball.ycor()
+    }
+    print(data)
+    return data
+
+def send_data():
+    data = build_json()
+    requests.post(SERVER, data=data)
+
+
+
 # Keyboard binding
 wn.listen()
 wn.onkeypress(paddle_a_up, "w")
@@ -137,3 +168,5 @@ while True:
         ball.setx(-340)
         ball.dx *= -1
         # winsound.PlaySound("bounce.wav", winsound.SND_ASYNC)
+
+    build_json()
