@@ -91,14 +91,6 @@ def paddle_b_down():
 
 
 def build_json():
-    # {
-    #     "Player1X": 100,
-    #     "Player1Y": 100,
-    #     "Player2X": 100,
-    #     "Player2Y": 100,
-    #     "BallX": 100,
-    #     "BallY": 100
-    # }
     data = {
         "player1X": round(paddle_a.xcor()),
         "player1Y": round(paddle_a.ycor()),
@@ -107,23 +99,6 @@ def build_json():
         "ballX": round(ball.xcor()),
         "ballY": round(ball.ycor())
     }
-    # data = {
-    #     "player1X": 10,
-    #     "player1Y": -10,
-    #     "player2X": 0,
-    #     "player2Y": 0,
-    #     "ballX": 0,
-    #     "ballY": 0
-    # }
-
-    # data = {
-    #     "player1X": 0,
-    #     "player1Y": 0,
-    #     "player2X": 0,
-    #     "player2Y": 0,
-    #     "ballX": 0,
-    #     "ballY": 0
-    # }
     return data
 
 def send_data():
@@ -131,10 +106,6 @@ def send_data():
     
     data = build_json()
     print(f'{data=}')
-    # string = json.dumps(data)
-    # print(string)
-
-    # res = requests.post(SERVER, headers=headers, data=string)
     res = requests.post(SERVER, json=data)
     print(res)
 
