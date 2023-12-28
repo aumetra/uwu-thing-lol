@@ -33,7 +33,7 @@ public class QueueService : IQueueService
                 items = workItemQueue.Skip(index).ToArray();
             else
                 items = workItemQueue.Skip(index).Take(s_take).ToArray();
-            logger.LogInformation("Left {Length}", items.Length - index);
+            logger.LogInformation("Left {Length}", workItemQueue.Count - index);
             index += s_take;
             return items;
         }

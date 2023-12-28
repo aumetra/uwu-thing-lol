@@ -12,13 +12,15 @@ public class FromPingPongService : ILoaderService
     const int BallHeight = 25;
     const int BallWidth = 25;
 
+    private readonly ILogger<FromPingPongService> logger;
     private readonly BlockingCollection<PingPongTick> pingPongTickQueue = new();
     private readonly QueueService queueService;
     private Task computeTicksTask;
 
-    public FromPingPongService(IQueueService queueService)
+    public FromPingPongService(IQueueService queueService, ILogger<FromPingPongService> logger)
     {
         this.queueService = (QueueService)queueService;
+        this.logger = logger;
     }
 
     public void AddTick(PingPongTick tick)
@@ -45,11 +47,9 @@ public class FromPingPongService : ILoaderService
                 try
                 {
                     queueService.Clear();
-
-                    //queueService.Add(background);
+                    queueService.Add(ball);
                     queueService.Add(rect1);
                     queueService.Add(rect2);
-                    queueService.Add(ball);
                 }
                 finally
                 {
@@ -135,7 +135,9 @@ public class FromPingPongService : ILoaderService
                 {
                     clr = color;
                 }
-                list.Add(string.Format("PX {0} {1} {2}", x, y, clr));
+                var tmp = string.Format("PX {0} {1} {2}", x, y, clr);
+                list.Add(tmp);
+                //logger.LogInformation(tmp);
             }
         }
         Shuffle(ref list);
