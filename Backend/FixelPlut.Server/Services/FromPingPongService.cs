@@ -128,21 +128,14 @@ public class FromPingPongService : ILoaderService
             {
                 string clr = "000000";
 
+                var circleCenterX = posX + width / 2;
+                var circleCenterY = posY + height / 2;
                 // check if coordinates are inside circle
-                if (Math.Pow(x - posX, 2) + Math.Pow(y - posY, 2) <= Math.Pow(width / 2, 2))
+                if (Math.Pow(x - circleCenterX, 2) + Math.Pow(y - circleCenterY, 2) <= Math.Pow(width / 2, 2))
                 {
                     clr = color;
                 }
-                else
-                {
-                    continue;
-                }
-
                 list.Add(string.Format("PX {0} {1} {2}", x, y, clr));
-                list.Add(string.Format("PX {0} {1} {2}", x + movementOffset, y + movementOffset, clr));
-                list.Add(string.Format("PX {0} {1} {2}", x + movementOffset, y - movementOffset, clr));
-                list.Add(string.Format("PX {0} {1} {2}", x - movementOffset, y - movementOffset, clr));
-                list.Add(string.Format("PX {0} {1} {2}", x - movementOffset, y + movementOffset, clr));
             }
         }
         Shuffle(ref list);
