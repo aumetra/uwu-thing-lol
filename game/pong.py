@@ -10,15 +10,17 @@ import time
 
 
 SERVER = "http://151.217.2.77:5000/PingPong"
-
-
-
+REQUEST_EACH = 25
+request_counter = 0
 
 wn = turtle.Screen()
 wn.title("Pong by K G Prajwal")  # Window title
 wn.bgcolor("black")  # Window background
-wn.setup(width=800, height=600)  # Window size
+wn.setup(width=1920, height=1080)  # Window size
 wn.tracer(0)  # Stops window from updating - Speedup
+
+windowHalfWidth = 1920 / 2
+windowHalfHeight = 1080 / 2
 
 # Scoreboard
 score_a = 0
@@ -51,8 +53,8 @@ ball.shape("square")
 ball.color("white")
 ball.penup()
 ball.goto(0, 0)
-ball.dx = 0.5
-ball.dy = 0.5
+ball.dx = 1.5
+ball.dy = 1.5
 
 # Pen - Scoreboard
 pen = turtle.Turtle()
@@ -92,12 +94,12 @@ def paddle_b_down():
 
 def build_json():
     data = {
-        "player1X": round(paddle_a.xcor()),
-        "player1Y": round(paddle_a.ycor()),
-        "player2X": round(paddle_b.xcor()),
-        "player2Y": round(paddle_b.ycor()),
-        "ballX": round(ball.xcor()),
-        "ballY": round(ball.ycor())
+        "player1X": round(paddle_a.xcor() + windowHalfWidth),
+        "player1Y": round(paddle_a.ycor() + windowHalfHeight),
+        "player2X": round(paddle_b.xcor() + windowHalfWidth),
+        "player2Y": round(paddle_b.ycor() + windowHalfHeight),
+        "ballX": round(ball.xcor() + windowHalfWidth),
+        "ballY": round(ball.ycor() + windowHalfHeight)
     }
     return data
 
@@ -109,10 +111,6 @@ def send_data():
     res = requests.post(SERVER, json=data)
     print(res)
 
-
-
-
-
 # Keyboard binding
 wn.listen()
 wn.onkeypress(paddle_a_up, "w")
@@ -120,14 +118,12 @@ wn.onkeypress(paddle_a_down, "s")
 wn.onkeypress(paddle_b_up, "Up")
 wn.onkeypress(paddle_b_down, "Down")
 
-
 # Main game loop
 while True:
     time.sleep(0.001)  # Delay for game
 
     # handle keys:
     # if wn.on
-
 
     wn.update()  # Update screen everytime loop runs
 
@@ -174,5 +170,9 @@ while True:
         ball.dx *= -1
         # winsound.PlaySound("bounce.wav", winsound.SND_ASYNC)
 
-    # build_json()
-    send_data()
+    if(request_counter > REQUEST_EACH):
+        # build_json()
+        send_data()
+        request_counter = 0
+    else:
+        request_counter = request_counter + 1

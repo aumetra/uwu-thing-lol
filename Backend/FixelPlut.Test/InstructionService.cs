@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using FixelPlut.Shared.Models;
+using System.Collections.Concurrent;
 using System.Net.Http.Json;
 using System.Text;
 
@@ -16,13 +17,25 @@ internal class InstructionService
     {
         client = new HttpClient()
         {
-            BaseAddress = new Uri("http://localhost:32774"),
+            BaseAddress = new Uri("http://151.217.2.77:5000"),
         };
         refreshTask = Task.Run(RefreshTask);
     }
 
     private async Task RefreshTask()
     {
+        //var a = await client.PostAsJsonAsync(
+        //    "PingPong",
+        //    new PingPongTick
+        //    {
+        //        BallX = 100,
+        //        BallY = 100,
+        //        Player1X = 100,
+        //        Player1Y = 100,
+        //        Player2X = 100,
+        //        Player2Y = 100,
+        //    });
+
         while (true)
         {
             try

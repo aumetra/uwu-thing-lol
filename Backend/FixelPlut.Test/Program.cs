@@ -23,7 +23,7 @@ internal static class Program
     {
         //var cmds = File.ReadAllLines(@"C:\Users\danielh\source\repos\PixelFlut\PixelFlut.Server\Commands\37C3\1.txt");
         //var cmdBytes = cmds.Select(Encoding.ASCII.GetBytes).ToArray();
-        await Run("151.217.15.79", 1337);
+        await Run("151.217.15.90", 1337);
     }
 
     private static async Task Run(string ip, int port)
@@ -76,7 +76,6 @@ internal static class Program
     {
         try
         {
-            long counter = 0;
             var networkStream = new NetworkStream(socket, true);
 
             ConsoleWriteLine(taskId, "Running");
@@ -92,19 +91,10 @@ internal static class Program
                         await networkStream.WriteAsync(cmds[i]);
                         await networkStream.WriteAsync(nl);
                         await networkStream.FlushAsync();
-                        //counter++;
                     }
                     ConsoleWriteLine(taskId, "Update");
-                    //if (counter > 10000)
-                    //{
-                    //    counter = 0;
-                    //    socket.Dispose();
-
-                    //    socket = await CreateSocketConnection("151.217.15.79", 1337);
-                    //    networkStream = new NetworkStream(socket, true);
-                    //}
                 }
-                catch
+                catch(Exception ex)
                 {
                     ConsoleWriteLine(taskId, "Fail");
                 }

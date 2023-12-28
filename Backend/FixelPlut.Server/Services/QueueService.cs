@@ -20,9 +20,9 @@ public class QueueService : IQueueService
     {
         if (index > workItemQueue.Count - s_take)
             index = 0;
-        var a = workItemQueue.Skip(index).Take(s_take).ToArray();
+        var items = workItemQueue.Skip(index).Take(s_take).ToArray();
         index += s_take;
-        return a;
+        return items;
     }
 
     internal void Shuffle()
@@ -36,5 +36,16 @@ public class QueueService : IQueueService
             workItemQueue[n] = workItemQueue[k];
             workItemQueue[k] = temp;
         }
+    }
+
+    internal void Add(IEnumerable<string> rect1)
+    {
+        workItemQueue.AddRange(rect1);
+    }
+
+    internal void Limit(int count)
+    {
+        if(workItemQueue.Count > count)
+            workItemQueue.RemoveRange(0, count);
     }
 }

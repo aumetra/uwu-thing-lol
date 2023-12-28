@@ -18,7 +18,7 @@ public partial class FromFileService : ILoaderService
         {
             await using var ms = new MemoryStream();
             await using var writer = new StreamWriter(ms);
-            using var img = new MagickImage("Pixelflut.png");
+            using var img = new MagickImage("37c3-cover-image.gif", MagickFormat.Gif);
 
             img.Resize(400, 600);
 

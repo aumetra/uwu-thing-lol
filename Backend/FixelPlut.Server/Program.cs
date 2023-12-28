@@ -1,5 +1,7 @@
 using FixelPlut.Server.Services;
+using FixelPlut.Shared.Models;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 
 namespace FixelPlut.Server
 {
@@ -9,10 +11,12 @@ namespace FixelPlut.Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddHostedService<FromFileService>();
+            //builder.Services.AddHostedService<FromFileService>();
+            builder.Services.AddSingleton<FromPingPongService>();
+            builder.Services.AddHostedService<FromPingPongService>(x => x.GetRequiredService<FromPingPongService>());
             builder.Services.AddSingleton<IQueueService, QueueService>();
             builder.Services.AddControllers();
+            builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
@@ -20,10 +24,12 @@ namespace FixelPlut.Server
 
             app.UseAuthorization();
 
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.MapControllers();
 
-            app.Run();
+            app.Run("http://151.217.2.77:5000");
         }
     }
 }
