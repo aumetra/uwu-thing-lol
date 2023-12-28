@@ -4,9 +4,12 @@
 import turtle  # Basic Graphics module
 # import winsound  # For Sound
 
+import requests
+import json
 import time
 
-SERVER = "http://localhost:5000"
+
+SERVER = "http://151.217.2.77:5000/PingPong"
 
 
 
@@ -97,19 +100,45 @@ def build_json():
     #     "BallY": 100
     # }
     data = {
-        "Player1X": paddle_a.xcor(),
-        "Player1Y": paddle_a.ycor(),
-        "Player2X": paddle_b.xcor(),
-        "Player2Y": paddle_b.ycor(),
-        "BallX": ball.xcor(),
-        "BallY": ball.ycor()
+        "player1X": round(paddle_a.xcor()),
+        "player1Y": round(paddle_a.ycor()),
+        "player2X": round(paddle_b.xcor()),
+        "player2Y": round(paddle_b.ycor()),
+        "ballX": round(ball.xcor()),
+        "ballY": round(ball.ycor())
     }
-    print(data)
+    # data = {
+    #     "player1X": 10,
+    #     "player1Y": -10,
+    #     "player2X": 0,
+    #     "player2Y": 0,
+    #     "ballX": 0,
+    #     "ballY": 0
+    # }
+
+    # data = {
+    #     "player1X": 0,
+    #     "player1Y": 0,
+    #     "player2X": 0,
+    #     "player2Y": 0,
+    #     "ballX": 0,
+    #     "ballY": 0
+    # }
     return data
 
 def send_data():
+    headers = {'Content-Type': 'application/json'}
+    
     data = build_json()
-    requests.post(SERVER, data=data)
+    print(f'{data=}')
+    # string = json.dumps(data)
+    # print(string)
+
+    # res = requests.post(SERVER, headers=headers, data=string)
+    res = requests.post(SERVER, json=data)
+    print(res)
+
+
 
 
 
@@ -124,6 +153,11 @@ wn.onkeypress(paddle_b_down, "Down")
 # Main game loop
 while True:
     time.sleep(0.001)  # Delay for game
+
+    # handle keys:
+    # if wn.on
+
+
     wn.update()  # Update screen everytime loop runs
 
     # Move the ball
@@ -169,4 +203,5 @@ while True:
         ball.dx *= -1
         # winsound.PlaySound("bounce.wav", winsound.SND_ASYNC)
 
-    build_json()
+    # build_json()
+    send_data()
