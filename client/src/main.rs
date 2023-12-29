@@ -31,7 +31,7 @@ fn main() {
     let writer = lock.clone();
     thread::spawn(move || {
         while (true) {
-            let result = make_http_request("http://151.217.2.77:5000/Instructions");
+            let result = make_http_request("http://151.217.2.77:5000/instructions/");
             let mut w = writer.write().unwrap();
             *w = Some(result);
         }
