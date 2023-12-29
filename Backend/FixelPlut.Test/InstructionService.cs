@@ -17,7 +17,7 @@ internal class InstructionService
     {
         client = new HttpClient()
         {
-            BaseAddress = new Uri("http://151.217.2.77:5000"),
+            BaseAddress = new Uri($"http://{Program.s_Ip_Backend}:{Program.s_Port_Backend}/"),
         };
         refreshTask = Task.Run(RefreshTask);
     }

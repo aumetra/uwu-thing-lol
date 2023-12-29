@@ -95,11 +95,11 @@ def paddle_b_down():
 def build_json():
     data = {
         "player1X": round(paddle_a.xcor() + windowHalfWidth),
-        "player1Y": round(paddle_a.ycor() + windowHalfHeight),
+        "player1Y": round(-paddle_a.ycor() + windowHalfHeight),
         "player2X": round(paddle_b.xcor() + windowHalfWidth),
-        "player2Y": round(paddle_b.ycor() + windowHalfHeight),
+        "player2Y": round(-paddle_b.ycor() + windowHalfHeight),
         "ballX": round(ball.xcor() + windowHalfWidth),
-        "ballY": round(ball.ycor() + windowHalfHeight)
+        "ballY": round(-ball.ycor() + windowHalfHeight)
     }
     return data
 

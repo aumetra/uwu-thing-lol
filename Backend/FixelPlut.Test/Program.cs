@@ -6,6 +6,11 @@ namespace FixelPlut.Client;
 
 internal static class Program
 {
+    internal static readonly string s_Ip_Backend = Environment.GetEnvironmentVariable("BACKEND_IP") ?? "151.217.2.77";// "151.217.2.77";
+    internal static readonly string s_Port_Backend = Environment.GetEnvironmentVariable("BACKEND_PORT") ?? "5000";
+    internal static readonly string s_Ip_PixelFlut = Environment.GetEnvironmentVariable("PIXELFLUT_IP") ?? "151.217.15.90";
+    internal static readonly string s_Port_PixelFlut = Environment.GetEnvironmentVariable("PIXELFLUT_PORT") ?? "1337";
+
     const int s_connectingTimeout = 5000;
     static readonly Task consoleWriteTask;
     private readonly static byte[] nl = new byte[] { (byte)'\n' };
@@ -21,7 +26,7 @@ internal static class Program
 
     static async Task Main(string[] args)
     {
-        await Run("151.217.15.90", 1337);
+        await Run(s_Ip_PixelFlut, int.Parse(s_Port_PixelFlut));
     }
 
     private static async Task Run(string ip, int port)
@@ -92,7 +97,7 @@ internal static class Program
                     }
                     ConsoleWriteLine(taskId, "Update");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ConsoleWriteLine(taskId, "Fail");
                 }
