@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "FixelPlut.Client": {
-      "commandName": "Project"
-    },
+    //"FixelPlut.Client": {
+    //  "commandName": "Project"
+    //},
     "Docker": {
       "commandName": "Docker"
     }
