@@ -1,59 +1,54 @@
-use bufstream::BufStream;
-use http::Uri;
-use serde::Deserialize;
-use std::ops::Deref;
-use std::sync::{mpsc, Arc, RwLock};
-use std::thread;
-use std::{io::Write, net::TcpStream};
+use std::sync::LazyLock;
+use tokio::{io::AsyncWriteExt, net::TcpStream};
 
-fn make_http_request(url: &str) -> Vec<String> {
-    // Parse the URL into a Uri
-    let uri: Uri = url.parse().expect("Invalid URL");
+static CLIENT: LazyLock<reqwest::Client> = LazyLock::new(|| reqwest::Client::new());
+#[allow(non_upper_case_globals)]
+static OUTPUT_COUNT_ÙwÚ: usize = 100;
 
+async fn make_http_request(url: &str) -> Vec<String> {
     // Make the HTTP GET request using ureq
-    return ureq::get(&uri.to_string())
-        .call()
+    CLIENT.get(url).send().await
         .unwrap()
-        .into_json()
-        .unwrap();
+        .json().await.unwrap()
 }
 
-fn ballern(commands: Vec<String>, buffer: BufStream<TcpStream>) {
-    for cmd in commands {
-        buffer.get_ref().write_all(cmd.as_bytes()).unwrap();
-        buffer.get_ref().write_all(b"\n").unwrap();
-        buffer.get_ref().flush().unwrap();
-    }
-}
+#[tokio::main]
+async fn main() {
+    let (sender, receiver) = async_channel::unbounded();
 
-fn main() {
-    let lock = Arc::new(RwLock::new(None));
-    let writer = lock.clone();
-    thread::spawn(move || {
-        while (true) {
-            let result = make_http_request("http://151.217.2.77:5000/instructions/");
-            let mut w = writer.write().unwrap();
-            *w = Some(result);
+    tokio::spawn({
+        let sender = sender.clone();
+        async move {
+            loop {
+                let result = make_http_request("http://151.217.2.77:5000/instructions/").await;
+                let _ = sender.send(result).await;
+            }
         }
     });
-    for i in 0..2 {
-        let reciever = lock.clone();
-        thread::spawn(move || {
-            while (true) {
-                match TcpStream::connect("151.217.15.90:1337") {
-                    Ok(mut stream) => {
-                        let mut buf = BufStream::new(stream);
-                        if let Some(commands) = reciever.read().unwrap().deref() {
-                            ballern(commands.clone(), buf);
+
+    for _ in 0..OUTPUT_COUNT_ÙwÚ {
+        tokio::spawn({
+            let receiver = receiver.clone();
+            async move {
+                loop {
+                    match TcpStream::connect("151.217.15.90:1337").await {
+                        Ok(mut stream) => {
+                            let commands = receiver.recv().await.unwrap();
+                            for command in commands {
+                                let _ = stream.write_all(command.as_bytes()).await;
+                                let _ = stream.write_all(b"\n").await;
+                            }
+
+                            let _ = stream.flush().await;
                         }
-                    }
-                    Err(e) => {
-                        println!("Failed to connect: {}", e);
+                        Err(err) => {
+                            eprintln!("connection failed: {err}");
+                        }
                     }
                 }
             }
         });
     }
 
-    while (true) {}
+    std::future::pending::<()>().await;
 }
